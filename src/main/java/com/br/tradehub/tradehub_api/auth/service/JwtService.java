@@ -10,5 +10,6 @@ public interface JwtService {
     Boolean validateRefreshToken(String refreshToken);
     String extractUsername(String token);
     Date getRefreshTokenExpiration();
+    String extractClaim(String token, String claimName);
 
 }

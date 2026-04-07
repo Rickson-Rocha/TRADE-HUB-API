@@ -26,7 +26,7 @@ public class JwtServiceImpl  implements JwtService{
     @Override
     public String generateAccesToken(User user) {
         return Jwts.builder()
-                .subject(user.getEmail())
+                .subject(user.getId().toString())
                 .claim("email",user.getEmail())
                 .claim("role", user.getRole())
                 .claim("username", user.getUsername())
@@ -75,5 +75,15 @@ public class JwtServiceImpl  implements JwtService{
     @Override
     public Date getRefreshTokenExpiration() {
         return new Date(System.currentTimeMillis() + refreshTokenExpiration);
+    }
+
+    @Override
+    public String extractClaim(String token, String claimName) {
+        return Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get(claimName, String.class);
     }
 }
